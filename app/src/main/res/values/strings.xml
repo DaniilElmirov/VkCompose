@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">VkCompose</string>
     <string name="template_text">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit</string>
+    <string name="navigation_item_home">Home</string>
+    <string name="navigation_item_favorite">Favorite</string>
+    <string name="navigation_item_profile">Profile</string>
 </resources>
