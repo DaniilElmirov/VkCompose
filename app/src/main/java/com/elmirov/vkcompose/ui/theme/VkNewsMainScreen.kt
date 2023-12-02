@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Favorite
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Home
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Profile
@@ -53,6 +54,8 @@ fun MainScreen() {
             modifier = Modifier.padding(it),
             text = ""
         )
-        PostCard()
+        PostCard(
+            modifier = Modifier.padding(8.dp)
+        )
     }
 }
