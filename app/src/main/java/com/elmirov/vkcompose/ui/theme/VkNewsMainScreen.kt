@@ -1,5 +1,6 @@
 package com.elmirov.vkcompose.ui.theme
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -9,22 +10,22 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.elmirov.vkcompose.MainViewModel
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Favorite
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Home
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Profile
 
 @Composable
-fun MainScreen() {
-    val feedPost = remember {
-        mutableStateOf(FeedPost())
-    }
+fun MainScreen(
+    viewModel: MainViewModel,
+) {
 
     Scaffold(
         bottomBar = {
@@ -56,27 +57,15 @@ fun MainScreen() {
             }
         }
     ) {
-        Text(
-            modifier = Modifier.padding(it),
-            text = ""
-        )
+        Log.d("TAG", "$it")
+
+        val feedPost = viewModel.feedPost.observeAsState(FeedPost())
 
         PostCard(
             modifier = Modifier.padding(8.dp),
             feedPost = feedPost.value,
-            onStatisticsItemClickListener = { newItem ->
-                val oldStatistics = feedPost.value.statistics
-
-                val newStatistics = oldStatistics.toMutableList().apply {
-                    replaceAll { oldItem ->
-                        if (oldItem.type == newItem.type)
-                            oldItem.copy(count = oldItem.count + 1)
-                        else
-                            oldItem
-                    }
-                }
-
-                feedPost.value = feedPost.value.copy(statistics = newStatistics)
+            onStatisticsItemClickListener = { statisticsItem ->
+                viewModel.updateCount(statisticsItem)
             }
         )
     }
