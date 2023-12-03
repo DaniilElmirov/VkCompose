@@ -5,13 +5,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +27,7 @@ import com.elmirov.vkcompose.ui.theme.NavigationItem.Favorite
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Home
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Profile
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     viewModel: MainViewModel,
@@ -75,19 +80,32 @@ fun MainScreen(
                 items = feedPosts.value,
                 key = { it.id }
             ) { feedPost ->
-                PostCard(
-                    feedPost = feedPost,
-                    onLikeClickListener = { statisticItem ->
-                        viewModel.updateCount(feedPost = feedPost, item = statisticItem)
-                    },
-                    onShareClickListener = { statisticItem ->
-                        viewModel.updateCount(feedPost = feedPost, item = statisticItem)
-                    },
-                    onViewsClickListener = { statisticItem ->
-                        viewModel.updateCount(feedPost = feedPost, item = statisticItem)
-                    },
-                    onCommentClickListener = { statisticItem ->
-                        viewModel.updateCount(feedPost = feedPost, item = statisticItem)
+
+                val dismissState = rememberDismissState()
+
+                if (dismissState.isDismissed(DismissDirection.EndToStart))
+                    viewModel.delete(feedPost)
+
+                SwipeToDismiss(
+                    state = dismissState,
+                    directions = setOf(DismissDirection.EndToStart),
+                    background = {},
+                    dismissContent = {
+                        PostCard(
+                            feedPost = feedPost,
+                            onLikeClickListener = { statisticItem ->
+                                viewModel.updateCount(feedPost = feedPost, item = statisticItem)
+                            },
+                            onShareClickListener = { statisticItem ->
+                                viewModel.updateCount(feedPost = feedPost, item = statisticItem)
+                            },
+                            onViewsClickListener = { statisticItem ->
+                                viewModel.updateCount(feedPost = feedPost, item = statisticItem)
+                            },
+                            onCommentClickListener = { statisticItem ->
+                                viewModel.updateCount(feedPost = feedPost, item = statisticItem)
+                            },
+                        )
                     },
                 )
             }
