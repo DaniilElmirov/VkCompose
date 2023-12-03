@@ -1,7 +1,10 @@
 package com.elmirov.vkcompose.ui.theme
 
 import android.util.Log
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -13,11 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.elmirov.vkcompose.MainViewModel
-import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Favorite
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Home
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Profile
@@ -56,18 +57,40 @@ fun MainScreen(
                 }
             }
         }
-    ) {
-        Log.d("TAG", "$it")
+    ) { padding ->
+        Log.d("TAG", "$padding")
 
-        val feedPost = viewModel.feedPost.observeAsState(FeedPost())
+        val feedPosts = viewModel.feedPosts.observeAsState(listOf())
 
-        PostCard(
-            modifier = Modifier.padding(8.dp),
-            feedPost = feedPost.value,
-            onLikeClickListener = viewModel::updateCount,
-            onShareClickListener = viewModel::updateCount,
-            onViewsClickListener = viewModel::updateCount,
-            onCommentClickListener = viewModel::updateCount,
-        )
+        LazyColumn(
+            contentPadding = PaddingValues(
+                top = 16.dp,
+                start = 8.dp,
+                end = 8.dp,
+                bottom = 88.dp,
+            ),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(
+                items = feedPosts.value,
+                key = { it.id }
+            ) { feedPost ->
+                PostCard(
+                    feedPost = feedPost,
+                    onLikeClickListener = { statisticItem ->
+                        viewModel.updateCount(feedPost = feedPost, item = statisticItem)
+                    },
+                    onShareClickListener = { statisticItem ->
+                        viewModel.updateCount(feedPost = feedPost, item = statisticItem)
+                    },
+                    onViewsClickListener = { statisticItem ->
+                        viewModel.updateCount(feedPost = feedPost, item = statisticItem)
+                    },
+                    onCommentClickListener = { statisticItem ->
+                        viewModel.updateCount(feedPost = feedPost, item = statisticItem)
+                    },
+                )
+            }
+        }
     }
 }

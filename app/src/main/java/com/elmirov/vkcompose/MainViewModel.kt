@@ -8,12 +8,18 @@ import com.elmirov.vkcompose.domain.StatisticItem
 
 class MainViewModel : ViewModel() {
 
-    private val _feedPost = MutableLiveData(FeedPost())
-    val feedPost: LiveData<FeedPost> = _feedPost
+    private val initialList = mutableListOf<FeedPost>().apply {
+        repeat(20) {
+            add(FeedPost(id = it))
+        }
+    }
 
-    fun updateCount(item: StatisticItem) {
-        val oldStatistics =
-            feedPost.value?.statistics ?: throw IllegalStateException("FeedPost is NULL")
+    private val _feedPosts = MutableLiveData<List<FeedPost>>(initialList)
+    val feedPosts: LiveData<List<FeedPost>> = _feedPosts
+
+    fun updateCount(feedPost: FeedPost, item: StatisticItem) {
+        val oldPosts = feedPosts.value?.toMutableList() ?: mutableListOf()
+        val oldStatistics = feedPost.statistics
 
         val newStatistics = oldStatistics.toMutableList().apply {
             replaceAll { oldItem ->
@@ -24,6 +30,21 @@ class MainViewModel : ViewModel() {
             }
         }
 
-        _feedPost.value = feedPost.value?.copy(statistics = newStatistics)
+        val newFeedPost = feedPost.copy(statistics = newStatistics)
+        _feedPosts.value = oldPosts.apply {
+            replaceAll {
+                if (it.id == newFeedPost.id)
+                    newFeedPost
+                else
+                    it
+            }
+        }
+    }
+
+    fun delete(feedPost: FeedPost) {
+        val oldPosts = feedPosts.value?.toMutableList() ?: mutableListOf()
+        oldPosts.remove(feedPost)
+
+        _feedPosts.value = oldPosts
     }
 }
