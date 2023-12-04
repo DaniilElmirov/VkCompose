@@ -19,6 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.elmirov.vkcompose.MainViewModel
 import com.elmirov.vkcompose.navigation.AppNavGraph
+import com.elmirov.vkcompose.navigation.Screen
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Favorite
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Home
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Profile
@@ -42,7 +43,15 @@ fun MainScreen(
                     NavigationBarItem(
                         selected = currentRoute == item.screen.route,
                         onClick = {
-                            navHostController.navigate(item.screen.route)
+                            navHostController.navigate(item.screen.route) {
+                                launchSingleTop = true //Теперь в бэкстеке будет лежать только 1 экземпляр экрана
+
+                                popUpTo(Screen.NewsFeed.route) { //Теперь в приложении не хранится вся история переходов
+                                    saveState = true //При удалении экрана из бэкстека его стэйт будет сохраняться
+                                }
+
+                                restoreState = true //Восстанавливает стэйт экрана
+                            }
                         },
                         icon = {
                             Icon(item.icon, contentDescription = null)
