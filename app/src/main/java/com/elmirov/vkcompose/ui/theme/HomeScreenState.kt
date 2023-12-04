@@ -5,7 +5,7 @@ import com.elmirov.vkcompose.domain.FeedPost
 
 sealed interface HomeScreenState {
 
-    object Initial: HomeScreenState
+    object Initial : HomeScreenState
 
     data class Posts(
         val posts: List<FeedPost>,
