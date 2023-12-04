@@ -18,9 +18,8 @@ import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,19 +33,19 @@ import com.elmirov.vkcompose.ui.theme.NavigationItem.Profile
 fun MainScreen(
     viewModel: MainViewModel,
 ) {
+    val selectedNavItem by viewModel.selectedNavItem.observeAsState(Home)
 
     Scaffold(
         bottomBar = {
             NavigationBar {
                 val items = listOf(Home, Favorite, Profile)
-                val selectedItemPosition = rememberSaveable {
-                    mutableStateOf(0)
-                }
 
-                items.forEachIndexed { index, item ->
+                items.forEach { item ->
                     NavigationBarItem(
-                        selected = index == selectedItemPosition.value,
-                        onClick = { selectedItemPosition.value = index },
+                        selected = selectedNavItem == item,
+                        onClick = {
+                            viewModel.selectNavItem(item)
+                        },
                         icon = {
                             Icon(item.icon, contentDescription = null)
                         },
