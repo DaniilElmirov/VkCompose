@@ -16,10 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.elmirov.vkcompose.MainViewModel
 import com.elmirov.vkcompose.navigation.AppNavGraph
-import com.elmirov.vkcompose.navigation.Screen
+import com.elmirov.vkcompose.navigation.rememberNavigationState
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Favorite
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Home
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Profile
@@ -28,31 +27,20 @@ import com.elmirov.vkcompose.ui.theme.NavigationItem.Profile
 fun MainScreen(
     viewModel: MainViewModel,
 ) {
-
-    val navHostController = rememberNavController()
+    val navigationState = rememberNavigationState()
 
     Scaffold(
         bottomBar = {
             NavigationBar {
                 val items = listOf(Home, Favorite, Profile)
 
-                val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+                val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
 
                 items.forEach { item ->
                     NavigationBarItem(
                         selected = currentRoute == item.screen.route,
-                        onClick = {
-                            navHostController.navigate(item.screen.route) {
-                                launchSingleTop = true //Теперь в бэкстеке будет лежать только 1 экземпляр экрана
-
-                                popUpTo(Screen.NewsFeed.route) { //Теперь в приложении не хранится вся история переходов
-                                    saveState = true //При удалении экрана из бэкстека его стэйт будет сохраняться
-                                }
-
-                                restoreState = true //Восстанавливает стэйт экрана
-                            }
-                        },
+                        onClick = { navigationState.navigateTo(item.screen.route) },
                         icon = {
                             Icon(item.icon, contentDescription = null)
                         },
@@ -73,7 +61,7 @@ fun MainScreen(
     ) { paddingValues ->
 
         AppNavGraph(
-            navHostController = navHostController,
+            navHostController = navigationState.navHostController,
             homeScreenContent = {
                 HomeScreen(
                     viewModel = viewModel,
