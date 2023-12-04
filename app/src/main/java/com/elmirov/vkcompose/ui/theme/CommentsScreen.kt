@@ -36,6 +36,7 @@ import com.elmirov.vkcompose.domain.FeedPost
 fun CommentsScreen(
     feedPost: FeedPost,
     comments: List<Comment>,
+    onBackPressed: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -46,7 +47,9 @@ fun CommentsScreen(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { },
+                        onClick = {
+                            onBackPressed()
+                        },
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.ArrowBack,
