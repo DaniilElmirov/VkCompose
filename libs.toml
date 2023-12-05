@@ -1,0 +1,9 @@
+[versions]
+core = "1.8.0"
+
+[libraries]
+kotlin-android-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
+
+
+[bundles]
+retrofit-deps = ["kotlin-android-ktx"]
