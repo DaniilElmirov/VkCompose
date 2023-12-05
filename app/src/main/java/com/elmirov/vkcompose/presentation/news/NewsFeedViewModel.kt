@@ -29,6 +29,7 @@ class NewsFeedViewModel @Inject constructor(
 
     private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
         Log.d("exceptionHandler", "exception")
+        Log.d("exceptionHandler", "exception")
     }
 
     private val recommendations = getRecommendationsUseCase()
