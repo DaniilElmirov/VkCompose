@@ -1,5 +1,6 @@
 package com.elmirov.vkcompose.navigation
 
+import android.net.Uri
 import com.elmirov.vkcompose.domain.FeedPost
 
 sealed class Screen(
@@ -29,3 +30,6 @@ sealed class Screen(
 
     object Profile : Screen(ROUTE_PROFILE)
 }
+
+fun String.encode(): String = Uri.encode(this) //Для экранирования спец символов в строке
+// (прим: при передаче строки как параметра)
