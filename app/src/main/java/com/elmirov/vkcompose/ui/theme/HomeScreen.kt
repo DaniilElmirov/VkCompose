@@ -21,7 +21,7 @@ import com.elmirov.vkcompose.ui.theme.NewsFeedScreenState.Initial
 import com.elmirov.vkcompose.ui.theme.NewsFeedScreenState.Posts
 
 @Composable
-fun NewsFeedScreen(
+fun HomeScreen(
     paddingValues: PaddingValues,
     onCommentClickListener: (FeedPost) -> Unit,
 ) {

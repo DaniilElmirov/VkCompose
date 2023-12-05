@@ -18,10 +18,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.navigation.AppNavGraph
-import com.elmirov.vkcompose.navigation.Screen
 import com.elmirov.vkcompose.navigation.rememberNavigationState
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Favorite
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Home
@@ -41,12 +41,18 @@ fun MainScreen() {
                 val items = listOf(Home, Favorite, Profile)
 
                 val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
 
                 items.forEach { item ->
+                    val selected = navBackStackEntry?.destination?.hierarchy?.any {
+                        it.route == item.screen.route
+                    } ?: false
+
                     NavigationBarItem(
-                        selected = currentRoute == item.screen.route,
-                        onClick = { navigationState.navigateTo(item.screen.route) },
+                        selected = selected,
+                        onClick = {
+                            if (!selected)
+                                navigationState.navigateTo(item.screen.route)
+                        },
                         icon = {
                             Icon(item.icon, contentDescription = null)
                         },
@@ -69,19 +75,19 @@ fun MainScreen() {
         AppNavGraph(
             navHostController = navigationState.navHostController,
             newsFeedScreenContent = {
-                NewsFeedScreen(
+                HomeScreen(
                     paddingValues = paddingValues,
                     onCommentClickListener = {
                         commentsToPost.value = it
-                        navigationState.navigateTo(Screen.Comments.route)
+                        navigationState.navigateToComments()
                     },
                 )
             },
             commentsScreenContent = {
                 CommentsScreen(
-                    feedPost = commentsToPost.value!!,
+                    feedPost = commentsToPost.value!!, //Плохо
                     onBackPressed = {
-                        commentsToPost.value = null
+                        navigationState.navHostController.popBackStack()
                     },
                 )
             },
