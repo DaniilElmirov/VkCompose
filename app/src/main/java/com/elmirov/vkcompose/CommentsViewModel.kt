@@ -9,16 +9,18 @@ import com.elmirov.vkcompose.ui.theme.CommentsScreenState
 import com.elmirov.vkcompose.ui.theme.CommentsScreenState.Comments
 import com.elmirov.vkcompose.ui.theme.CommentsScreenState.Initial
 
-class CommentsViewModel : ViewModel() {
+class CommentsViewModel(
+    feedPost: FeedPost,
+) : ViewModel() {
 
     private val _screenState = MutableLiveData<CommentsScreenState>(Initial)
     val screenState: LiveData<CommentsScreenState> = _screenState
 
     init {
-        loadComments(FeedPost()) //Очень плохое временное решение
+        loadComments(feedPost)
     }
 
-    fun loadComments(feedPost: FeedPost) {
+    private fun loadComments(feedPost: FeedPost) {
         val comments = mutableListOf<Comment>().apply {
             repeat(20) {
                 add(Comment(id = it))
