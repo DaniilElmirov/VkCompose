@@ -3,19 +3,12 @@ package com.elmirov.vkcompose
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.elmirov.vkcompose.domain.Comment
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.domain.StatisticItem
-import com.elmirov.vkcompose.ui.theme.HomeScreenState
-import com.elmirov.vkcompose.ui.theme.HomeScreenState.*
+import com.elmirov.vkcompose.ui.theme.NewsFeedScreenState
+import com.elmirov.vkcompose.ui.theme.NewsFeedScreenState.Posts
 
-class MainViewModel : ViewModel() {
-
-    private val comments = mutableListOf<Comment>().apply {
-        repeat(20) {
-            add(Comment(id = it))
-        }
-    }
+class NewsFeedViewModel : ViewModel() {
 
     private val initialList = mutableListOf<FeedPost>().apply {
         repeat(20) {
@@ -24,21 +17,8 @@ class MainViewModel : ViewModel() {
     }
     private val initialState = Posts(posts = initialList)
 
-    private val _screenState = MutableLiveData<HomeScreenState>(initialState)
-    val screenState: LiveData<HomeScreenState> = _screenState
-
-    private var savedState: HomeScreenState? = initialState
-
-    fun showComments(
-        feedPost: FeedPost,
-    ) {
-        savedState = _screenState.value
-        _screenState.value = Comments(feedPost = feedPost, comments = comments)
-    }
-
-    fun closeComments() {
-        _screenState.value = savedState
-    }
+    private val _screenState = MutableLiveData<NewsFeedScreenState>(initialState)
+    val screenState: LiveData<NewsFeedScreenState> = _screenState
 
     fun updateCount(feedPost: FeedPost, item: StatisticItem) {
         val currentState = screenState.value

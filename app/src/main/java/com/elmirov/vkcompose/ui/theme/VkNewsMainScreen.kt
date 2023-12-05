@@ -9,14 +9,17 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.elmirov.vkcompose.MainViewModel
+import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.navigation.AppNavGraph
 import com.elmirov.vkcompose.navigation.rememberNavigationState
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Favorite
@@ -24,10 +27,12 @@ import com.elmirov.vkcompose.ui.theme.NavigationItem.Home
 import com.elmirov.vkcompose.ui.theme.NavigationItem.Profile
 
 @Composable
-fun MainScreen(
-    viewModel: MainViewModel,
-) {
+fun MainScreen() {
     val navigationState = rememberNavigationState()
+
+    val commentsToPost: MutableState<FeedPost?> = remember { //Временное решение
+        mutableStateOf(null)
+    }
 
     Scaffold(
         bottomBar = {
@@ -63,10 +68,18 @@ fun MainScreen(
         AppNavGraph(
             navHostController = navigationState.navHostController,
             homeScreenContent = {
-                HomeScreen(
-                    viewModel = viewModel,
-                    paddingValues = paddingValues
-                )
+                //Временное решение
+                if (commentsToPost.value == null) {
+                    NewsFeedScreen(
+                        paddingValues = paddingValues,
+                        onCommentClickListener = {
+                            commentsToPost.value = it
+                        },
+                    )
+                } else
+                    CommentsScreen {
+                        commentsToPost.value = null
+                    }
             },
             favouriteScreenContent = { TextCounter(name = "Favourite") },
             profileScreenContent = { TextCounter(name = "Profile") },
@@ -77,7 +90,7 @@ fun MainScreen(
 @Composable
 private fun TextCounter(name: String) {
     var count by rememberSaveable {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     Text(
