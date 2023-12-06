@@ -1,11 +1,13 @@
 [versions]
 core = "1.8.0"
 coil = "2.1.0"
+vk = "4.1.0"
 
 [libraries]
 kotlin-android-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-
+vk-core = { group = "com.vk", name = "android-sdk-core", version.ref = "vk" }
+vk-api = { group = "com.vk", name = "android-sdk-api", version.ref = "vk" }
 
 [bundles]
-retrofit-deps = ["kotlin-android-ktx"]
+vk-deps = ["vk-core", "vk-api"]
