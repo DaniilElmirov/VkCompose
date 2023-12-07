@@ -1,4 +1,4 @@
-package com.elmirov.vkcompose.ui.theme
+package com.elmirov.vkcompose.samples
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

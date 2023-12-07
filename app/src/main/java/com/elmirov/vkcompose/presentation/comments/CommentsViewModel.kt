@@ -1,13 +1,12 @@
-package com.elmirov.vkcompose
+package com.elmirov.vkcompose.presentation.comments
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.elmirov.vkcompose.domain.Comment
 import com.elmirov.vkcompose.domain.FeedPost
-import com.elmirov.vkcompose.ui.theme.CommentsScreenState
-import com.elmirov.vkcompose.ui.theme.CommentsScreenState.Comments
-import com.elmirov.vkcompose.ui.theme.CommentsScreenState.Initial
+import com.elmirov.vkcompose.presentation.comments.CommentsScreenState.Comments
+import com.elmirov.vkcompose.presentation.comments.CommentsScreenState.Initial
 
 class CommentsViewModel(
     feedPost: FeedPost,

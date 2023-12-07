@@ -1,4 +1,4 @@
-package com.elmirov.vkcompose
+package com.elmirov.vkcompose.presentation.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,11 +6,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.elmirov.vkcompose.AuthState.Authorized
-import com.elmirov.vkcompose.AuthState.Initial
-import com.elmirov.vkcompose.AuthState.NoAuthorized
-import com.elmirov.vkcompose.ui.theme.LoginScreen
-import com.elmirov.vkcompose.ui.theme.MainScreen
+import com.elmirov.vkcompose.presentation.main.AuthState.Authorized
+import com.elmirov.vkcompose.presentation.main.AuthState.Initial
+import com.elmirov.vkcompose.presentation.main.AuthState.NoAuthorized
 import com.elmirov.vkcompose.ui.theme.VkComposeTheme
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKScope

@@ -1,4 +1,4 @@
-package com.elmirov.vkcompose
+package com.elmirov.vkcompose.presentation.comments
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

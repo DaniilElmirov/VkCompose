@@ -1,4 +1,4 @@
-package com.elmirov.vkcompose.ui.theme
+package com.elmirov.vkcompose.presentation.news
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

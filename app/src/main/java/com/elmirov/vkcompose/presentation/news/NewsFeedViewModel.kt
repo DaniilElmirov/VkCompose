@@ -1,12 +1,11 @@
-package com.elmirov.vkcompose
+package com.elmirov.vkcompose.presentation.news
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.domain.StatisticItem
-import com.elmirov.vkcompose.ui.theme.NewsFeedScreenState
-import com.elmirov.vkcompose.ui.theme.NewsFeedScreenState.Posts
+import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Posts
 
 class NewsFeedViewModel : ViewModel() {
 

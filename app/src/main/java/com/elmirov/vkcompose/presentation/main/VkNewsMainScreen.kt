@@ -1,4 +1,4 @@
-package com.elmirov.vkcompose.ui.theme
+package com.elmirov.vkcompose.presentation.main
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.Icon
@@ -19,9 +19,11 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.elmirov.vkcompose.navigation.AppNavGraph
 import com.elmirov.vkcompose.navigation.rememberNavigationState
-import com.elmirov.vkcompose.ui.theme.NavigationItem.Favorite
-import com.elmirov.vkcompose.ui.theme.NavigationItem.Home
-import com.elmirov.vkcompose.ui.theme.NavigationItem.Profile
+import com.elmirov.vkcompose.presentation.comments.CommentsScreen
+import com.elmirov.vkcompose.presentation.news.NewsFeedScreen
+import com.elmirov.vkcompose.presentation.main.NavigationItem.Favorite
+import com.elmirov.vkcompose.presentation.main.NavigationItem.Home
+import com.elmirov.vkcompose.presentation.main.NavigationItem.Profile
 
 @Composable
 fun MainScreen() {
@@ -67,7 +69,7 @@ fun MainScreen() {
         AppNavGraph(
             navHostController = navigationState.navHostController,
             newsFeedScreenContent = {
-                HomeScreen(
+                NewsFeedScreen(
                     paddingValues = paddingValues,
                     onCommentClickListener = {
                         navigationState.navigateToComments(it)

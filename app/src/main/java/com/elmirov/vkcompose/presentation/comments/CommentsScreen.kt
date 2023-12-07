@@ -1,4 +1,4 @@
-package com.elmirov.vkcompose.ui.theme
+package com.elmirov.vkcompose.presentation.comments
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -30,11 +30,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.elmirov.vkcompose.CommentsViewModel
-import com.elmirov.vkcompose.CommentsViewModelFactory
 import com.elmirov.vkcompose.domain.Comment
 import com.elmirov.vkcompose.domain.FeedPost
-import com.elmirov.vkcompose.ui.theme.CommentsScreenState.*
+import com.elmirov.vkcompose.presentation.comments.CommentsScreenState.*
+import com.elmirov.vkcompose.ui.theme.VkComposeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

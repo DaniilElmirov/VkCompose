@@ -1,11 +1,11 @@
-package com.elmirov.vkcompose
+package com.elmirov.vkcompose.presentation.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.elmirov.vkcompose.AuthState.Authorized
-import com.elmirov.vkcompose.AuthState.Initial
-import com.elmirov.vkcompose.AuthState.NoAuthorized
+import com.elmirov.vkcompose.presentation.main.AuthState.Authorized
+import com.elmirov.vkcompose.presentation.main.AuthState.Initial
+import com.elmirov.vkcompose.presentation.main.AuthState.NoAuthorized
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult
 
