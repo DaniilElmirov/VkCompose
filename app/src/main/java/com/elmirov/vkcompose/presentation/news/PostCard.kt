@@ -1,6 +1,5 @@
 package com.elmirov.vkcompose.presentation.news
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.elmirov.vkcompose.R
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.domain.StatisticItem
@@ -56,11 +57,11 @@ fun PostCard(
             text = feedPost.contentText,
         )
 
-        Image(
+        AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp),
-            painter = painterResource(id = feedPost.contentImageResId),
+                .wrapContentHeight(),
+            model = feedPost.contentImageUrl,
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
         )
@@ -85,11 +86,11 @@ private fun Header(
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Image(
+        AsyncImage(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape),
-            painter = painterResource(id = feedPost.avatarResId),
+            model = feedPost.communityImageUrl,
             contentDescription = null,
         )
 
