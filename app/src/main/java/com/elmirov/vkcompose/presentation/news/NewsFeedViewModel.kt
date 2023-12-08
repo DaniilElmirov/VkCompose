@@ -1,23 +1,41 @@
 package com.elmirov.vkcompose.presentation.news
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.elmirov.vkcompose.data.converter.ResponseConverter
+import com.elmirov.vkcompose.data.network.api.ApiFactory
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.domain.StatisticItem
+import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Initial
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Posts
+import com.vk.api.sdk.VKPreferencesKeyValueStorage
+import com.vk.api.sdk.auth.VKAccessToken
+import kotlinx.coroutines.launch
 
-class NewsFeedViewModel : ViewModel() {
+class NewsFeedViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val initialList = mutableListOf<FeedPost>().apply {
-        repeat(20) {
-            add(FeedPost(id = it))
+    private val _screenState = MutableLiveData<NewsFeedScreenState>(Initial)
+    val screenState: LiveData<NewsFeedScreenState> = _screenState
+
+    private val converter = ResponseConverter()
+
+    init {
+        loadRecommendations()
+    }
+
+    private fun loadRecommendations() {
+        viewModelScope.launch {
+            val storage = VKPreferencesKeyValueStorage(getApplication())
+            val token = VKAccessToken.restore(storage) ?: return@launch
+            val response = ApiFactory.apiService.getRecommendation(token = token.accessToken)
+
+            val feedPosts = converter(response)
+            _screenState.value = Posts(posts = feedPosts)
         }
     }
-    private val initialState = Posts(posts = initialList)
-
-    private val _screenState = MutableLiveData<NewsFeedScreenState>(initialState)
-    val screenState: LiveData<NewsFeedScreenState> = _screenState
 
     fun updateCount(feedPost: FeedPost, item: StatisticItem) {
         val currentState = screenState.value
