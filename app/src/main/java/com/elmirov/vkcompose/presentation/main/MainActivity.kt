@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     Authorized -> MainScreen()
 
                     NoAuthorized -> LoginScreen {
-                        launcher.launch(listOf(VKScope.WALL))
+                        launcher.launch(listOf(VKScope.WALL, VKScope.FRIENDS))
                     }
                 }
             }
