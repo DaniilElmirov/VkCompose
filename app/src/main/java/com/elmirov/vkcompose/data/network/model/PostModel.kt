@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName
 data class PostModel(
     val id: Long,
     @SerializedName("source_id") val communityId: Long,
-    @SerializedName("is_favourite") val isFavourite: Boolean,
     val text: String,
     val date: Long,
     val likes: LikesModel,
