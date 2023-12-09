@@ -31,6 +31,12 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun changeLikeStatus(feedPost: FeedPost) {
+        viewModelScope.launch {
+            repository.addLike(feedPost)
+        }
+    }
+
     fun updateCount(feedPost: FeedPost, item: StatisticItem) {
         val currentState = screenState.value
 
