@@ -32,12 +32,20 @@ class NewsFeedRepository(
         return posts
     }
 
-    suspend fun addLike(feedPost: FeedPost) {
-        val response = apiService.addLike(
-            token = getToken(),
-            ownerId = feedPost.communityId,
-            postId = feedPost.id,
-        )
+    suspend fun changeLikeStatus(feedPost: FeedPost) {
+        val response = if (feedPost.isLiked) {
+            apiService.deleteLike(
+                token = getToken(),
+                ownerId = feedPost.communityId,
+                postId = feedPost.id,
+            )
+        } else {
+            apiService.addLike(
+                token = getToken(),
+                ownerId = feedPost.communityId,
+                postId = feedPost.id,
+            )
+        }
 
         val newLikesCount = response.likes.count
         val newStatistics = feedPost.statistics.toMutableList().apply {
@@ -45,7 +53,7 @@ class NewsFeedRepository(
             add(StatisticItem(type = StatisticType.LIKES, count = newLikesCount))
         }
 
-        val newPost = feedPost.copy(statistics = newStatistics, isLiked = true)
+        val newPost = feedPost.copy(statistics = newStatistics, isLiked = !feedPost.isLiked)
         val postIndex = _feedPosts.indexOf(feedPost)
         _feedPosts[postIndex] = newPost
     }
