@@ -6,7 +6,6 @@ import com.elmirov.vkcompose.data.network.api.ApiFactory
 import com.elmirov.vkcompose.domain.FeedPost
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
-import java.lang.IllegalStateException
 
 class NewsFeedRepository(
     application: Application,
@@ -23,6 +22,10 @@ class NewsFeedRepository(
 
         return converter(response)
     }
+
+    suspend fun addLike(feedPost: FeedPost) =
+        apiService.addLike(token = getToken(), ownerId = feedPost.communityId, postId = feedPost.id)
+
 
     private fun getToken(): String = token?.accessToken ?: throw IllegalStateException("null TOKEN")
 }
