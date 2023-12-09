@@ -28,6 +28,7 @@ class ResponseConverter {
             val group = groups.find { it.id == post.communityId.absoluteValue } ?: continue
             val feedPost = FeedPost(
                 id = post.id,
+                communityId = post.communityId,
                 communityName = group.name,
                 publicationDate = convertTimestampToDate(post.date * IN_MILLIS),
                 communityImageUrl = group.imageUrl,

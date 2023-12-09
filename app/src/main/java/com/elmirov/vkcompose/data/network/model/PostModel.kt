@@ -3,7 +3,7 @@ package com.elmirov.vkcompose.data.network.model
 import com.google.gson.annotations.SerializedName
 
 data class PostModel(
-    val id: String,
+    val id: Long,
     @SerializedName("source_id") val communityId: Long,
     @SerializedName("is_favourite") val isFavourite: Boolean,
     val text: String,
