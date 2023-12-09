@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ import com.elmirov.vkcompose.R
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.domain.StatisticItem
 import com.elmirov.vkcompose.domain.StatisticType
+import com.elmirov.vkcompose.ui.theme.DarkRed
 
 @Composable
 fun PostCard(
@@ -72,6 +74,7 @@ fun PostCard(
             onShareClickListener = onShareClickListener,
             onViewsClickListener = onViewsClickListener,
             onCommentClickListener = onCommentClickListener,
+            isFavourite = feedPost.isFavourite,
         )
     }
 }
@@ -128,6 +131,7 @@ private fun Statistic(
     onShareClickListener: (StatisticItem) -> Unit,
     onViewsClickListener: (StatisticItem) -> Unit,
     onCommentClickListener: (StatisticItem) -> Unit,
+    isFavourite: Boolean,
 ) {
     Row(
         modifier = Modifier.padding(8.dp),
@@ -170,11 +174,12 @@ private fun Statistic(
 
             val likesItem = statistics.getItemByType(StatisticType.LIKES)
             IconWithText(
-                iconResId = R.drawable.ic_like,
+                iconResId = if (isFavourite) R.drawable.ic_like_set else R.drawable.ic_like,
                 text = formatStatisticCount(likesItem.count),
                 onItemClickListener = {
                     onLikeClickListener(likesItem)
                 },
+                tint = if (isFavourite) DarkRed else MaterialTheme.colorScheme.onSecondary,
             )
         }
     }
@@ -200,6 +205,7 @@ private fun IconWithText(
     iconResId: Int,
     text: String,
     onItemClickListener: () -> Unit,
+    tint: Color = MaterialTheme.colorScheme.onSecondary,
 ) {
     Row(
         modifier = Modifier.clickable {
@@ -208,9 +214,10 @@ private fun IconWithText(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
+            modifier = Modifier.size(20.dp),
             painter = painterResource(id = iconResId),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSecondary,
+            tint = tint,
         )
 
         Spacer(modifier = Modifier.width(4.dp))

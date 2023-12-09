@@ -38,7 +38,8 @@ class ResponseConverter {
                     StatisticItem(type = VIEWS, count = post.views.count),
                     StatisticItem(type = SHARES, count = post.reposts.count),
                     StatisticItem(type = COMMENTS, count = post.comments.count),
-                )
+                ),
+                isFavourite = post.isFavourite
             )
 
             result.add(feedPost)
