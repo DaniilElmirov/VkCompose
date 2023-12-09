@@ -5,14 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.elmirov.vkcompose.data.converter.ResponseConverter
-import com.elmirov.vkcompose.data.network.api.ApiFactory
+import com.elmirov.vkcompose.data.repository.NewsFeedRepository
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.domain.StatisticItem
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Initial
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Posts
-import com.vk.api.sdk.VKPreferencesKeyValueStorage
-import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.launch
 
 class NewsFeedViewModel(application: Application) : AndroidViewModel(application) {
@@ -20,7 +17,7 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     private val _screenState = MutableLiveData<NewsFeedScreenState>(Initial)
     val screenState: LiveData<NewsFeedScreenState> = _screenState
 
-    private val converter = ResponseConverter()
+    private val repository = NewsFeedRepository(application)
 
     init {
         loadRecommendations()
@@ -28,11 +25,8 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
 
     private fun loadRecommendations() {
         viewModelScope.launch {
-            val storage = VKPreferencesKeyValueStorage(getApplication())
-            val token = VKAccessToken.restore(storage) ?: return@launch
-            val response = ApiFactory.apiService.getRecommendation(token = token.accessToken)
+            val feedPosts = repository.getRecommendations()
 
-            val feedPosts = converter(response)
             _screenState.value = Posts(posts = feedPosts)
         }
     }
