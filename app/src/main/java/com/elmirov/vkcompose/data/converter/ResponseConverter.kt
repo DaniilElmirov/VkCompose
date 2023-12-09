@@ -7,9 +7,16 @@ import com.elmirov.vkcompose.domain.StatisticType.COMMENTS
 import com.elmirov.vkcompose.domain.StatisticType.LIKES
 import com.elmirov.vkcompose.domain.StatisticType.SHARES
 import com.elmirov.vkcompose.domain.StatisticType.VIEWS
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.math.absoluteValue
 
 class ResponseConverter {
+
+    companion object {
+        private const val IN_MILLIS = 1000
+    }
 
     operator fun invoke(from: NewsFeedResponseModel): List<FeedPost> {
         val result = mutableListOf<FeedPost>()
@@ -22,7 +29,7 @@ class ResponseConverter {
             val feedPost = FeedPost(
                 id = post.id,
                 communityName = group.name,
-                publicationDate = post.date.toString(),
+                publicationDate = convertTimestampToDate(post.date * IN_MILLIS),
                 communityImageUrl = group.imageUrl,
                 contentText = post.text,
                 contentImageUrl = post.attachments?.firstOrNull()?.photo?.photoUrls?.lastOrNull()?.url,
@@ -38,5 +45,10 @@ class ResponseConverter {
         }
 
         return result
+    }
+
+    private fun convertTimestampToDate(timestamp: Long): String {
+        val date = Date(timestamp)
+        return SimpleDateFormat("d MMMM yyyy, hh:mm", Locale.getDefault()).format(date)
     }
 }
