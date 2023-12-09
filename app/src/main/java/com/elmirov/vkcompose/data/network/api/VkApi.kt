@@ -1,5 +1,6 @@
 package com.elmirov.vkcompose.data.network.api
 
+import com.elmirov.vkcompose.data.network.model.LikesCountResponseModel
 import com.elmirov.vkcompose.data.network.model.NewsFeedResponseModel
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -16,5 +17,5 @@ interface VkApi {
         @Query("access_token") token: String,
         @Query("owner_id") ownerId: Long,
         @Query("item_id") postId: Long,
-    )
+    ): LikesCountResponseModel
 }
