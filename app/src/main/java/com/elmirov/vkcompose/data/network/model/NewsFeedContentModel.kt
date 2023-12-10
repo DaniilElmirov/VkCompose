@@ -4,5 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class NewsFeedContentModel(
     @SerializedName("items") val posts: List<PostModel>,
-    val groups: List<GroupModel>
+    val groups: List<GroupModel>,
+    @SerializedName("next_from") val nextFrom: String?,
 )
