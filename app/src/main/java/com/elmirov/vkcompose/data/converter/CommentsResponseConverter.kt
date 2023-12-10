@@ -13,7 +13,9 @@ class CommentsResponseConverter {
         val profiles = from.content.profiles
 
         for (comment in comments) {
+            if (comment.text.isBlank()) continue
             val author = profiles.firstOrNull { it.id == comment.authorId } ?: continue
+
             val postComment = Comment(
                 id = comment.id,
                 authorName = "${author.firstName} ${author.lastName}",

@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.elmirov.vkcompose.data.repository.NewsFeedRepository
+import com.elmirov.vkcompose.data.repository.PostRepository
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Initial
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Loading
@@ -17,7 +17,7 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     private val _screenState = MutableLiveData<NewsFeedScreenState>(Initial)
     val screenState: LiveData<NewsFeedScreenState> = _screenState
 
-    private val repository = NewsFeedRepository(application)
+    private val repository = PostRepository(application)
 
     init {
         _screenState.value = Loading
