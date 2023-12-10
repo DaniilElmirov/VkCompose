@@ -12,7 +12,7 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.absoluteValue
 
-class ResponseConverter {
+class NewsFeedConverter {
 
     companion object {
         private const val IN_MILLIS = 1000

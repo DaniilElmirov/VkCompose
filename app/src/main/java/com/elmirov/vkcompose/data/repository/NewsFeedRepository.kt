@@ -1,7 +1,7 @@
 package com.elmirov.vkcompose.data.repository
 
 import android.app.Application
-import com.elmirov.vkcompose.data.converter.ResponseConverter
+import com.elmirov.vkcompose.data.converter.NewsFeedConverter
 import com.elmirov.vkcompose.data.network.api.ApiFactory
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.domain.StatisticItem
@@ -17,7 +17,7 @@ class NewsFeedRepository(
     private val token = VKAccessToken.restore(storage)
 
     private val apiService = ApiFactory.apiService
-    private val converter = ResponseConverter()
+    private val converter = NewsFeedConverter()
 
     private val _feedPosts = mutableListOf<FeedPost>()
     val feedPosts: List<FeedPost>
