@@ -12,6 +12,12 @@ interface VkApi {
         @Query("access_token") token: String,
     ): NewsFeedResponseModel
 
+    @GET("newsfeed.getRecommended?v=5.131")
+    suspend fun getRecommendation(
+        @Query("access_token") token: String,
+        @Query("start_from") startFrom: String,
+    ): NewsFeedResponseModel
+
     @GET("likes.add?v=5.131&type=post")
     suspend fun addLike(
         @Query("access_token") token: String,
