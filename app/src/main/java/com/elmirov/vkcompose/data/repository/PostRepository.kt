@@ -1,15 +1,17 @@
 package com.elmirov.vkcompose.data.repository
 
 import android.app.Application
+import com.elmirov.vkcompose.data.converter.CommentsResponseConverter
 import com.elmirov.vkcompose.data.converter.NewsFeedConverter
 import com.elmirov.vkcompose.data.network.api.ApiFactory
+import com.elmirov.vkcompose.domain.Comment
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.domain.StatisticItem
 import com.elmirov.vkcompose.domain.StatisticType
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 
-class NewsFeedRepository(
+class PostRepository(
     application: Application,
 ) {
 
@@ -17,7 +19,8 @@ class NewsFeedRepository(
     private val token = VKAccessToken.restore(storage)
 
     private val apiService = ApiFactory.apiService
-    private val converter = NewsFeedConverter()
+    private val newsFeedConverter = NewsFeedConverter()
+    private val commentsResponseConverter = CommentsResponseConverter()
 
     private val _feedPosts = mutableListOf<FeedPost>()
     val feedPosts: List<FeedPost>
@@ -35,7 +38,7 @@ class NewsFeedRepository(
             apiService.getRecommendation(getToken(), startFrom)
         nextFrom = response.newsFeedContent.nextFrom
 
-        val posts = converter(response)
+        val posts = newsFeedConverter(response)
         _feedPosts.addAll(posts)
 
         return feedPosts
@@ -75,6 +78,16 @@ class NewsFeedRepository(
         )
 
         _feedPosts.remove(feedPost)
+    }
+
+    suspend fun getComments(feedPost: FeedPost): List<Comment> {
+        val comments = apiService.getComments(
+            token = getToken(),
+            ownerId = feedPost.communityId,
+            postId = feedPost.id,
+        )
+
+        return commentsResponseConverter(comments)
     }
 
     private fun getToken(): String = token?.accessToken ?: throw IllegalStateException("null TOKEN")
