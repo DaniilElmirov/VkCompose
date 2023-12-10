@@ -1,5 +1,6 @@
 package com.elmirov.vkcompose.data.network.api
 
+import com.elmirov.vkcompose.data.network.model.CommentsResponseModel
 import com.elmirov.vkcompose.data.network.model.LikesCountResponseModel
 import com.elmirov.vkcompose.data.network.model.NewsFeedResponseModel
 import retrofit2.http.GET
@@ -38,4 +39,11 @@ interface VkApi {
         @Query("owner_id") ownerId: Long,
         @Query("item_id") postId: Long,
     )
+
+    @GET("wall.getComments?v=5.131&extended=1&fields=photo_100")
+    suspend fun getComments(
+        @Query("access_token") token: String,
+        @Query("owner_id") ownerId: Long,
+        @Query("item_id") postId: Long,
+    ): CommentsResponseModel
 }
