@@ -78,14 +78,10 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun delete(feedPost: FeedPost) {
-        val currentState = screenState.value
+        viewModelScope.launch {
+            repository.deletePost(feedPost)
 
-        if (currentState !is Posts)
-            return
-
-        val oldPosts = currentState.posts.toMutableList()
-        oldPosts.remove(feedPost)
-
-        _screenState.value = Posts(posts = oldPosts)
+            _screenState.value = Posts(posts = repository.feedPosts)
+        }
     }
 }
