@@ -6,6 +6,8 @@ sealed interface NewsFeedScreenState {
 
     object Initial : NewsFeedScreenState
 
+    object Loading : NewsFeedScreenState
+
     data class Posts(
         val posts: List<FeedPost>,
         val nextPostsIsLoading: Boolean = false,

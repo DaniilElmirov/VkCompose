@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Initial
+import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Loading
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Posts
 import com.elmirov.vkcompose.ui.theme.DarkBlue
 
@@ -42,6 +44,17 @@ fun NewsFeedScreen(
             onCommentClickListener = onCommentClickListener,
             nextPostsIsLoading = currentState.nextPostsIsLoading,
         )
+
+        Loading -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator(color = DarkBlue)
+            }
+        }
 
         Initial -> Unit
     }

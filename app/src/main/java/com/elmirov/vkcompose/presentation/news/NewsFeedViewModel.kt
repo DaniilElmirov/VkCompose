@@ -9,6 +9,7 @@ import com.elmirov.vkcompose.data.repository.NewsFeedRepository
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.domain.StatisticItem
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Initial
+import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Loading
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Posts
 import kotlinx.coroutines.launch
 
@@ -20,6 +21,8 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     private val repository = NewsFeedRepository(application)
 
     init {
+        _screenState.value = Loading
+
         loadRecommendations()
     }
 
