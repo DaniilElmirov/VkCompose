@@ -23,13 +23,22 @@ class NewsFeedRepository(
     val feedPosts: List<FeedPost>
         get() = _feedPosts.toList()
 
+    private var nextFrom: String? = null
+
     suspend fun getRecommendations(): List<FeedPost> {
-        val response = apiService.getRecommendation(getToken())
+        val startFrom = nextFrom
+        if (startFrom == null && feedPosts.isNotEmpty()) return feedPosts
+
+        val response = if (startFrom == null)
+            apiService.getRecommendation(getToken())
+        else
+            apiService.getRecommendation(getToken(), startFrom)
+        nextFrom = response.newsFeedContent.nextFrom
 
         val posts = converter(response)
         _feedPosts.addAll(posts)
 
-        return posts
+        return feedPosts
     }
 
     suspend fun changeLikeStatus(feedPost: FeedPost) {
