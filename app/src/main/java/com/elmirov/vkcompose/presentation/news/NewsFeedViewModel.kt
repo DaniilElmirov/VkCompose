@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.elmirov.vkcompose.data.repository.PostRepository
-import com.elmirov.vkcompose.domain.FeedPost
+import com.elmirov.vkcompose.domain.entity.FeedPost
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Loading
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Posts
 import com.elmirov.vkcompose.util.Utils.mergeWith

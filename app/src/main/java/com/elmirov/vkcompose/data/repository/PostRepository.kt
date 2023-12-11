@@ -4,11 +4,11 @@ import android.app.Application
 import com.elmirov.vkcompose.data.converter.CommentsResponseConverter
 import com.elmirov.vkcompose.data.converter.NewsFeedConverter
 import com.elmirov.vkcompose.data.network.api.ApiFactory
-import com.elmirov.vkcompose.domain.Comment
-import com.elmirov.vkcompose.domain.FeedPost
-import com.elmirov.vkcompose.domain.StatisticItem
-import com.elmirov.vkcompose.domain.StatisticType
-import com.elmirov.vkcompose.domain.AuthState
+import com.elmirov.vkcompose.domain.entity.Comment
+import com.elmirov.vkcompose.domain.entity.FeedPost
+import com.elmirov.vkcompose.domain.entity.StatisticItem
+import com.elmirov.vkcompose.domain.entity.StatisticType
+import com.elmirov.vkcompose.domain.entity.AuthState
 import com.elmirov.vkcompose.util.Utils.mergeWith
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken

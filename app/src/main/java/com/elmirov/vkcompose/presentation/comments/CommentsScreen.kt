@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.elmirov.vkcompose.R
-import com.elmirov.vkcompose.domain.Comment
-import com.elmirov.vkcompose.domain.FeedPost
+import com.elmirov.vkcompose.domain.entity.Comment
+import com.elmirov.vkcompose.domain.entity.FeedPost
 import com.elmirov.vkcompose.presentation.comments.CommentsScreenState.*
 
 @OptIn(ExperimentalMaterial3Api::class)

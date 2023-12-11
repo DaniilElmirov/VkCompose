@@ -1,7 +1,7 @@
 package com.elmirov.vkcompose.navigation
 
 import android.net.Uri
-import com.elmirov.vkcompose.domain.FeedPost
+import com.elmirov.vkcompose.domain.entity.FeedPost
 import com.google.gson.Gson
 
 sealed class Screen(

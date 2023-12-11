@@ -1,4 +1,4 @@
-package com.elmirov.vkcompose.domain
+package com.elmirov.vkcompose.domain.entity
 
 data class Comment(
     val id: Long,

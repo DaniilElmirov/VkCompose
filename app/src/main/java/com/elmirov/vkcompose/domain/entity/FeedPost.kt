@@ -1,4 +1,4 @@
-package com.elmirov.vkcompose.domain
+package com.elmirov.vkcompose.domain.entity
 
 import android.os.Bundle
 import android.os.Parcelable

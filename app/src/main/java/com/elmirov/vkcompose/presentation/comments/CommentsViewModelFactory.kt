@@ -3,7 +3,7 @@ package com.elmirov.vkcompose.presentation.comments
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.elmirov.vkcompose.domain.FeedPost
+import com.elmirov.vkcompose.domain.entity.FeedPost
 
 class CommentsViewModelFactory(
     private val feedPost: FeedPost,

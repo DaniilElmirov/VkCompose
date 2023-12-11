@@ -1,6 +1,6 @@
 package com.elmirov.vkcompose.presentation.news
 
-import com.elmirov.vkcompose.domain.FeedPost
+import com.elmirov.vkcompose.domain.entity.FeedPost
 
 sealed interface NewsFeedScreenState {
 
