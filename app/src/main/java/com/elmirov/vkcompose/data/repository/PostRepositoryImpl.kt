@@ -4,18 +4,18 @@ import android.app.Application
 import com.elmirov.vkcompose.data.converter.CommentsResponseConverter
 import com.elmirov.vkcompose.data.converter.NewsFeedConverter
 import com.elmirov.vkcompose.data.network.api.ApiFactory
+import com.elmirov.vkcompose.domain.entity.AuthState
 import com.elmirov.vkcompose.domain.entity.Comment
 import com.elmirov.vkcompose.domain.entity.FeedPost
 import com.elmirov.vkcompose.domain.entity.StatisticItem
 import com.elmirov.vkcompose.domain.entity.StatisticType
-import com.elmirov.vkcompose.domain.entity.AuthState
+import com.elmirov.vkcompose.domain.repository.PostRepository
 import com.elmirov.vkcompose.util.Utils.mergeWith
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,9 +23,9 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
 
-class PostRepository(
+class PostRepositoryImpl(
     application: Application,
-) {
+) : PostRepository {
     companion object {
         private const val RETRY_TIMEOUT_MILLIS = 3000L
     }
@@ -51,7 +51,7 @@ class PostRepository(
     private val nextPostsNeededEvent = MutableSharedFlow<Unit>(replay = 1)
     private val refreshPosts = MutableSharedFlow<List<FeedPost>>()
 
-    val authState = flow { //Временное решение
+    private val authState = flow { //Временное решение
         checkAuthEvent.emit(Unit)
 
         checkAuthEvent.collect {
@@ -66,9 +66,11 @@ class PostRepository(
         initialValue = AuthState.Initial
     )
 
-    suspend fun checkAuthState() {
+    override suspend fun checkAuthState() {
         checkAuthEvent.emit(Unit)
     }
+
+    override fun getAuthState(): StateFlow<AuthState> = authState
 
     private val loadedPosts = flow {
         nextPostsNeededEvent.emit(Unit)
@@ -96,19 +98,22 @@ class PostRepository(
         true
     }
 
-    val recommendations: StateFlow<List<FeedPost>> = loadedPosts
-        .mergeWith(refreshPosts)
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.Lazily,
-            initialValue = feedPosts,
-        )
+    private val recommendations: StateFlow<List<FeedPost>> =
+        loadedPosts
+            .mergeWith(refreshPosts)
+            .stateIn(
+                scope = coroutineScope,
+                started = SharingStarted.Lazily,
+                initialValue = feedPosts,
+            )
 
-    suspend fun loadNextPosts() {
+    override fun getRecommendations(): StateFlow<List<FeedPost>> = recommendations
+
+    override suspend fun loadNextRecommendations() {
         nextPostsNeededEvent.emit(Unit)
     }
 
-    suspend fun changeLikeStatus(feedPost: FeedPost) {
+    override suspend fun changeLikeStatus(feedPost: FeedPost) {
         val response = if (feedPost.isLiked) {
             apiService.deleteLike(
                 token = getToken(),
@@ -136,7 +141,7 @@ class PostRepository(
         refreshPosts.emit(feedPosts)
     }
 
-    suspend fun deletePost(feedPost: FeedPost) {
+    override suspend fun deletePost(feedPost: FeedPost) {
         apiService.ignorePost(
             token = getToken(),
             ownerId = feedPost.communityId,
@@ -147,7 +152,7 @@ class PostRepository(
         refreshPosts.emit(feedPosts)
     }
 
-    fun getComments(feedPost: FeedPost): Flow<List<Comment>> = flow {
+    override fun getComments(feedPost: FeedPost): StateFlow<List<Comment>> = flow {
         val comments = apiService.getComments(
             token = getToken(),
             ownerId = feedPost.communityId,
@@ -158,7 +163,11 @@ class PostRepository(
     }.retry {
         delay(RETRY_TIMEOUT_MILLIS)
         true
-    }
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.Lazily,
+        initialValue = listOf(),
+    )
 
     private fun getToken(): String = token?.accessToken ?: throw IllegalStateException("null TOKEN")
 }
