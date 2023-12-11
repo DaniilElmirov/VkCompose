@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 
     id 'kotlin-parcelize'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -66,6 +67,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+    implementation libs.dagger
+    kapt libs.dagger.compiler
     implementation libs.bundles.vk.deps
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
