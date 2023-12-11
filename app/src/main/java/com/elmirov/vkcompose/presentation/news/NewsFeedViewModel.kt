@@ -2,57 +2,59 @@ package com.elmirov.vkcompose.presentation.news
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.elmirov.vkcompose.data.repository.PostRepository
 import com.elmirov.vkcompose.domain.FeedPost
-import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Initial
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Loading
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Posts
+import com.elmirov.vkcompose.util.Utils.mergeWith
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class NewsFeedViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _screenState = MutableLiveData<NewsFeedScreenState>(Initial)
-    val screenState: LiveData<NewsFeedScreenState> = _screenState
-
     private val repository = PostRepository(application)
 
-    init {
-        _screenState.value = Loading
+    private val recommendations = repository.recommendations
 
-        loadRecommendations()
-    }
-
-    private fun loadRecommendations() {
-        viewModelScope.launch {
-            val feedPosts = repository.getRecommendations()
-            _screenState.value = Posts(posts = feedPosts)
+    private val loadNextPostsEvent = MutableSharedFlow<Unit>()
+    private val loadNextPosts = flow {
+        loadNextPostsEvent.collect {
+            emit(
+                Posts(
+                    posts = recommendations.value,
+                    nextPostsIsLoading = true,
+                )
+            )
         }
     }
 
-    fun getNextRecommendations() {
-        _screenState.value = Posts(
-            posts = repository.feedPosts,
-            nextPostsIsLoading = true,
-        )
+    val screenState = recommendations
+        .filter { it.isNotEmpty() }
+        .map { Posts(posts = it) as NewsFeedScreenState }
+        .onStart { emit(Loading) }
+        .mergeWith(loadNextPosts)
 
-        loadRecommendations()
+    fun getNextRecommendations() {
+        viewModelScope.launch {
+            loadNextPostsEvent.emit(Unit)
+            repository.loadNextPosts()
+        }
     }
 
     fun changeLikeStatus(feedPost: FeedPost) {
         viewModelScope.launch {
             repository.changeLikeStatus(feedPost)
-            _screenState.value = Posts(posts = repository.feedPosts)
         }
     }
 
     fun delete(feedPost: FeedPost) {
         viewModelScope.launch {
             repository.deletePost(feedPost)
-
-            _screenState.value = Posts(posts = repository.feedPosts)
         }
     }
 }
