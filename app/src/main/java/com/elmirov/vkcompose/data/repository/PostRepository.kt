@@ -13,15 +13,21 @@ import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
 
 class PostRepository(
     application: Application,
 ) {
+
+    companion object {
+        private const val RETRY_TIMEOUT_MILLIS = 3000L
+    }
 
     private val storage = VKPreferencesKeyValueStorage(application)
     private val token = VKAccessToken.restore(storage)
@@ -40,6 +46,7 @@ class PostRepository(
 
     private val nextPostsNeededEvent = MutableSharedFlow<Unit>(replay = 1)
     private val refreshPosts = MutableSharedFlow<List<FeedPost>>()
+
     private val loadedPosts = flow {
         nextPostsNeededEvent.emit(Unit)
 
@@ -61,6 +68,9 @@ class PostRepository(
 
             emit(feedPosts)
         }
+    }.retry {
+        delay(RETRY_TIMEOUT_MILLIS)
+        true
     }
 
     val recommendations: StateFlow<List<FeedPost>> = loadedPosts
