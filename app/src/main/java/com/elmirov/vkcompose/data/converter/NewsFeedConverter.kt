@@ -1,6 +1,5 @@
 package com.elmirov.vkcompose.data.converter
 
-import com.elmirov.vkcompose.data.converter.Utils.convertTimestampToDate
 import com.elmirov.vkcompose.data.network.model.NewsFeedResponseModel
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.domain.StatisticItem
@@ -8,6 +7,7 @@ import com.elmirov.vkcompose.domain.StatisticType.COMMENTS
 import com.elmirov.vkcompose.domain.StatisticType.LIKES
 import com.elmirov.vkcompose.domain.StatisticType.SHARES
 import com.elmirov.vkcompose.domain.StatisticType.VIEWS
+import com.elmirov.vkcompose.util.Utils.convertTimestampToDate
 import kotlin.math.absoluteValue
 
 class NewsFeedConverter {

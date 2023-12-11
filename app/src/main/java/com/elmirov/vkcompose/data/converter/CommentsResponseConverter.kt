@@ -1,8 +1,8 @@
 package com.elmirov.vkcompose.data.converter
 
-import com.elmirov.vkcompose.data.converter.Utils.convertTimestampToDate
 import com.elmirov.vkcompose.data.network.model.CommentsResponseModel
 import com.elmirov.vkcompose.domain.Comment
+import com.elmirov.vkcompose.util.Utils.convertTimestampToDate
 
 class CommentsResponseConverter {
 
