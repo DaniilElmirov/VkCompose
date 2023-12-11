@@ -1,6 +1,7 @@
 package com.elmirov.vkcompose.presentation.news
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.elmirov.vkcompose.data.repository.PostRepository
@@ -8,6 +9,7 @@ import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Loading
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Posts
 import com.elmirov.vkcompose.util.Utils.mergeWith
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
@@ -18,6 +20,10 @@ import kotlinx.coroutines.launch
 class NewsFeedViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = PostRepository(application)
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
+        Log.d("exceptionHandler", "exception")
+    }
 
     private val recommendations = repository.recommendations
 
@@ -47,13 +53,13 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun changeLikeStatus(feedPost: FeedPost) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             repository.changeLikeStatus(feedPost)
         }
     }
 
     fun delete(feedPost: FeedPost) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             repository.deletePost(feedPost)
         }
     }
