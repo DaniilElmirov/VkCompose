@@ -14,6 +14,7 @@ import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -124,14 +125,17 @@ class PostRepository(
         refreshPosts.emit(feedPosts)
     }
 
-    suspend fun getComments(feedPost: FeedPost): List<Comment> {
+    fun getComments(feedPost: FeedPost): Flow<List<Comment>> = flow {
         val comments = apiService.getComments(
             token = getToken(),
             ownerId = feedPost.communityId,
             postId = feedPost.id,
         )
 
-        return commentsResponseConverter(comments)
+        emit(commentsResponseConverter(comments))
+    }.retry {
+        delay(RETRY_TIMEOUT_MILLIS)
+        true
     }
 
     private fun getToken(): String = token?.accessToken ?: throw IllegalStateException("null TOKEN")

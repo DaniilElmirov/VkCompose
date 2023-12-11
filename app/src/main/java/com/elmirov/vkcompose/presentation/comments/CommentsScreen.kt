@@ -25,7 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -51,7 +51,7 @@ fun CommentsScreen(
             application = LocalContext.current.applicationContext as Application,
         ),
     )
-    val screenState = viewModel.screenState.observeAsState(Initial)
+    val screenState = viewModel.screenState.collectAsState(Initial)
     val currentState = screenState.value
 
     if (currentState is Comments) {
@@ -141,8 +141,6 @@ private fun CommentItem(
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSecondary,
             )
-
         }
-
     }
 }
