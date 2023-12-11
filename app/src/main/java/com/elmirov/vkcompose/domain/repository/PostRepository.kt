@@ -3,7 +3,6 @@ package com.elmirov.vkcompose.domain.repository
 import com.elmirov.vkcompose.domain.entity.AuthState
 import com.elmirov.vkcompose.domain.entity.Comment
 import com.elmirov.vkcompose.domain.entity.FeedPost
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 interface PostRepository {
@@ -12,7 +11,7 @@ interface PostRepository {
 
     fun getRecommendations(): StateFlow<List<FeedPost>>
 
-    fun getComments(feedPost: FeedPost): Flow<List<Comment>>
+    fun getComments(feedPost: FeedPost): StateFlow<List<Comment>>
 
     suspend fun checkAuthState()
 
