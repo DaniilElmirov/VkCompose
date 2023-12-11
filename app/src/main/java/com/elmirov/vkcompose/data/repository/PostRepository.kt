@@ -8,6 +8,7 @@ import com.elmirov.vkcompose.domain.Comment
 import com.elmirov.vkcompose.domain.FeedPost
 import com.elmirov.vkcompose.domain.StatisticItem
 import com.elmirov.vkcompose.domain.StatisticType
+import com.elmirov.vkcompose.domain.AuthState
 import com.elmirov.vkcompose.util.Utils.mergeWith
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
@@ -25,17 +26,21 @@ import kotlinx.coroutines.flow.stateIn
 class PostRepository(
     application: Application,
 ) {
-
     companion object {
         private const val RETRY_TIMEOUT_MILLIS = 3000L
     }
 
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+
     private val storage = VKPreferencesKeyValueStorage(application)
-    private val token = VKAccessToken.restore(storage)
+    private val token
+        get() = VKAccessToken.restore(storage)
 
     private val apiService = ApiFactory.apiService
     private val newsFeedConverter = NewsFeedConverter()
     private val commentsResponseConverter = CommentsResponseConverter()
+
+    private val checkAuthEvent = MutableSharedFlow<Unit>(replay = 1)
 
     private val _feedPosts = mutableListOf<FeedPost>()
     private val feedPosts: List<FeedPost>
@@ -43,10 +48,27 @@ class PostRepository(
 
     private var nextFrom: String? = null
 
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
-
     private val nextPostsNeededEvent = MutableSharedFlow<Unit>(replay = 1)
     private val refreshPosts = MutableSharedFlow<List<FeedPost>>()
+
+    val authState = flow { //Временное решение
+        checkAuthEvent.emit(Unit)
+
+        checkAuthEvent.collect {
+            val currentToken = token
+            val loggedIn = currentToken != null && currentToken.isValid
+            val authState = if (loggedIn) AuthState.Authorized else AuthState.NoAuthorized
+            emit(authState)
+        }
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.Lazily,
+        initialValue = AuthState.Initial
+    )
+
+    suspend fun checkAuthState() {
+        checkAuthEvent.emit(Unit)
+    }
 
     private val loadedPosts = flow {
         nextPostsNeededEvent.emit(Unit)

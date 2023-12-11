@@ -1,4 +1,4 @@
-package com.elmirov.vkcompose.presentation.main
+package com.elmirov.vkcompose.domain
 
 sealed interface AuthState {
 

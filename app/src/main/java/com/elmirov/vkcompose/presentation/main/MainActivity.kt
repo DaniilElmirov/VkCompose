@@ -4,11 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.elmirov.vkcompose.presentation.main.AuthState.Authorized
-import com.elmirov.vkcompose.presentation.main.AuthState.Initial
-import com.elmirov.vkcompose.presentation.main.AuthState.NoAuthorized
+import com.elmirov.vkcompose.domain.AuthState.Authorized
+import com.elmirov.vkcompose.domain.AuthState.Initial
+import com.elmirov.vkcompose.domain.AuthState.NoAuthorized
 import com.elmirov.vkcompose.ui.theme.VkComposeTheme
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKScope
@@ -22,12 +22,12 @@ class MainActivity : ComponentActivity() {
             VkComposeTheme {
 
                 val viewModel: MainViewModel = viewModel()
-                val authState = viewModel.authState.observeAsState(Initial)
+                val authState = viewModel.authState.collectAsState(Initial)
 
                 val launcher = rememberLauncherForActivityResult(
                     contract = VK.getVKAuthActivityResultContract(),
                 ) {
-                    viewModel.performAuthResult(it)
+                    viewModel.performAuthResult()
                 }
 
                 when (authState.value) {
