@@ -3,8 +3,9 @@ package com.elmirov.vkcompose.data.converter
 import com.elmirov.vkcompose.data.network.model.CommentsResponseModel
 import com.elmirov.vkcompose.domain.entity.Comment
 import com.elmirov.vkcompose.util.Utils.convertTimestampToDate
+import javax.inject.Inject
 
-class CommentsResponseConverter {
+class CommentsResponseConverter @Inject constructor() {
 
     operator fun invoke(from: CommentsResponseModel): List<Comment> {
         val result = mutableListOf<Comment>()

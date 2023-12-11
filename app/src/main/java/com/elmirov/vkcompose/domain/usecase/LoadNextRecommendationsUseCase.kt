@@ -1,8 +1,9 @@
 package com.elmirov.vkcompose.domain.usecase
 
 import com.elmirov.vkcompose.domain.repository.PostRepository
+import javax.inject.Inject
 
-class LoadNextRecommendationsUseCase(
+class LoadNextRecommendationsUseCase @Inject constructor(
     private val repository: PostRepository,
 ) {
 

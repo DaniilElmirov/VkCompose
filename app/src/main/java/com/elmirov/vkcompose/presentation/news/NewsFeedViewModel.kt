@@ -1,10 +1,8 @@
 package com.elmirov.vkcompose.presentation.news
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.elmirov.vkcompose.data.repository.PostRepositoryImpl
 import com.elmirov.vkcompose.domain.entity.FeedPost
 import com.elmirov.vkcompose.domain.usecase.ChangeLikeStatusUseCase
 import com.elmirov.vkcompose.domain.usecase.DeletePostUseCase
@@ -20,14 +18,14 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NewsFeedViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository = PostRepositoryImpl(application)
-    private val getRecommendationsUseCase = GetRecommendationsUseCase(repository)
-    private val loadNextRecommendationsUseCase = LoadNextRecommendationsUseCase(repository)
-    private val changeLikeStatusUseCase = ChangeLikeStatusUseCase(repository)
-    private val deletePostUseCase = DeletePostUseCase(repository)
+class NewsFeedViewModel @Inject constructor(
+    private val getRecommendationsUseCase: GetRecommendationsUseCase,
+    private val loadNextRecommendationsUseCase: LoadNextRecommendationsUseCase,
+    private val changeLikeStatusUseCase: ChangeLikeStatusUseCase,
+    private val deletePostUseCase: DeletePostUseCase,
+) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
         Log.d("exceptionHandler", "exception")

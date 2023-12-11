@@ -1,8 +1,9 @@
 package com.elmirov.vkcompose.domain.usecase
 
 import com.elmirov.vkcompose.domain.repository.PostRepository
+import javax.inject.Inject
 
-class CheckAuthStateUseCase(
+class CheckAuthStateUseCase @Inject constructor(
     private val repository: PostRepository,
 ) {
 

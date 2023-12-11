@@ -1,9 +1,8 @@
 package com.elmirov.vkcompose.data.repository
 
-import android.app.Application
 import com.elmirov.vkcompose.data.converter.CommentsResponseConverter
 import com.elmirov.vkcompose.data.converter.NewsFeedConverter
-import com.elmirov.vkcompose.data.network.api.ApiFactory
+import com.elmirov.vkcompose.data.network.api.VkApi
 import com.elmirov.vkcompose.domain.entity.AuthState
 import com.elmirov.vkcompose.domain.entity.Comment
 import com.elmirov.vkcompose.domain.entity.FeedPost
@@ -22,9 +21,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class PostRepositoryImpl(
-    application: Application,
+class PostRepositoryImpl @Inject constructor(
+    private val storage: VKPreferencesKeyValueStorage,
+    private val api: VkApi,
+    private val newsFeedConverter: NewsFeedConverter,
+    private val commentsResponseConverter: CommentsResponseConverter,
 ) : PostRepository {
     companion object {
         private const val RETRY_TIMEOUT_MILLIS = 3000L
@@ -32,13 +35,8 @@ class PostRepositoryImpl(
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    private val storage = VKPreferencesKeyValueStorage(application)
     private val token
         get() = VKAccessToken.restore(storage)
-
-    private val apiService = ApiFactory.apiService
-    private val newsFeedConverter = NewsFeedConverter()
-    private val commentsResponseConverter = CommentsResponseConverter()
 
     private val checkAuthEvent = MutableSharedFlow<Unit>(replay = 1)
 
@@ -83,9 +81,9 @@ class PostRepositoryImpl(
             }
 
             val response = if (startFrom == null)
-                apiService.getRecommendation(getToken())
+                api.getRecommendation(getToken())
             else
-                apiService.getRecommendation(getToken(), startFrom)
+                api.getRecommendation(getToken(), startFrom)
             nextFrom = response.newsFeedContent.nextFrom
 
             val posts = newsFeedConverter(response)
@@ -115,13 +113,13 @@ class PostRepositoryImpl(
 
     override suspend fun changeLikeStatus(feedPost: FeedPost) {
         val response = if (feedPost.isLiked) {
-            apiService.deleteLike(
+            api.deleteLike(
                 token = getToken(),
                 ownerId = feedPost.communityId,
                 postId = feedPost.id,
             )
         } else {
-            apiService.addLike(
+            api.addLike(
                 token = getToken(),
                 ownerId = feedPost.communityId,
                 postId = feedPost.id,
@@ -142,7 +140,7 @@ class PostRepositoryImpl(
     }
 
     override suspend fun deletePost(feedPost: FeedPost) {
-        apiService.ignorePost(
+        api.ignorePost(
             token = getToken(),
             ownerId = feedPost.communityId,
             postId = feedPost.id,
@@ -153,7 +151,7 @@ class PostRepositoryImpl(
     }
 
     override fun getComments(feedPost: FeedPost): StateFlow<List<Comment>> = flow {
-        val comments = apiService.getComments(
+        val comments = api.getComments(
             token = getToken(),
             ownerId = feedPost.communityId,
             postId = feedPost.id,

@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.elmirov.vkcompose.domain.entity.FeedPost
+import com.elmirov.vkcompose.presentation.ViewModelFactory
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Initial
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Loading
 import com.elmirov.vkcompose.presentation.news.NewsFeedScreenState.Posts
@@ -30,10 +31,11 @@ import com.elmirov.vkcompose.ui.theme.DarkBlue
 
 @Composable
 fun NewsFeedScreen(
+    viewModelFactory: ViewModelFactory,
     paddingValues: PaddingValues,
     onCommentClickListener: (FeedPost) -> Unit,
 ) {
-    val viewModel: NewsFeedViewModel = viewModel()
+    val viewModel: NewsFeedViewModel = viewModel(factory = viewModelFactory)
     val screenState = viewModel.screenState.collectAsState(Initial)
 
     when (val currentState = screenState.value) {

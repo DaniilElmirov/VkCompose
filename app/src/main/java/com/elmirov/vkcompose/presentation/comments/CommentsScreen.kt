@@ -1,6 +1,5 @@
 package com.elmirov.vkcompose.presentation.comments
 
-import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.elmirov.vkcompose.R
+import com.elmirov.vkcompose.VkComposeApplication
 import com.elmirov.vkcompose.domain.entity.Comment
 import com.elmirov.vkcompose.domain.entity.FeedPost
 import com.elmirov.vkcompose.presentation.comments.CommentsScreenState.*
@@ -45,11 +45,11 @@ fun CommentsScreen(
     onBackPressed: () -> Unit,
     feedPost: FeedPost,
 ) {
+    val component = (LocalContext.current.applicationContext as VkComposeApplication).component
+        .getCommentsScreenComponentFactory().create(feedPost)
+
     val viewModel: CommentsViewModel = viewModel(
-        factory = CommentsViewModelFactory(
-            feedPost = feedPost,
-            application = LocalContext.current.applicationContext as Application,
-        ),
+        factory = component.getViewModelFactory()
     )
     val screenState = viewModel.screenState.collectAsState(Initial)
     val currentState = screenState.value

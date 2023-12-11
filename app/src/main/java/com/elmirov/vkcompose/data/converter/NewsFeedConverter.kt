@@ -8,9 +8,10 @@ import com.elmirov.vkcompose.domain.entity.StatisticType.LIKES
 import com.elmirov.vkcompose.domain.entity.StatisticType.SHARES
 import com.elmirov.vkcompose.domain.entity.StatisticType.VIEWS
 import com.elmirov.vkcompose.util.Utils.convertTimestampToDate
+import javax.inject.Inject
 import kotlin.math.absoluteValue
 
-class NewsFeedConverter {
+class NewsFeedConverter @Inject constructor() {
     operator fun invoke(from: NewsFeedResponseModel): List<FeedPost> {
         val result = mutableListOf<FeedPost>()
 

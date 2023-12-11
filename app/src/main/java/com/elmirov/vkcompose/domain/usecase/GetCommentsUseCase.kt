@@ -4,8 +4,9 @@ import com.elmirov.vkcompose.domain.entity.Comment
 import com.elmirov.vkcompose.domain.entity.FeedPost
 import com.elmirov.vkcompose.domain.repository.PostRepository
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
-class GetCommentsUseCase(
+class GetCommentsUseCase @Inject constructor(
     private val repository: PostRepository,
 ) {
 
