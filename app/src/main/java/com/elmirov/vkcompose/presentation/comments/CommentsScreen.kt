@@ -24,34 +24,44 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.elmirov.vkcompose.R
-import com.elmirov.vkcompose.VkComposeApplication
 import com.elmirov.vkcompose.domain.entity.Comment
 import com.elmirov.vkcompose.domain.entity.FeedPost
+import com.elmirov.vkcompose.getApplicationComponent
 import com.elmirov.vkcompose.presentation.comments.CommentsScreenState.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsScreen(
     onBackPressed: () -> Unit,
     feedPost: FeedPost,
 ) {
-    val component = (LocalContext.current.applicationContext as VkComposeApplication).component
-        .getCommentsScreenComponentFactory().create(feedPost)
-
+    val component = getApplicationComponent().getCommentsScreenComponentFactory().create(feedPost)
     val viewModel: CommentsViewModel = viewModel(
         factory = component.getViewModelFactory()
     )
     val screenState = viewModel.screenState.collectAsState(Initial)
+
+    CommentsScreenContent(
+        screenState = screenState,
+        onBackPressed = onBackPressed,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CommentsScreenContent(
+    screenState: State<CommentsScreenState>,
+    onBackPressed: () -> Unit,
+) {
     val currentState = screenState.value
 
     if (currentState is Comments) {

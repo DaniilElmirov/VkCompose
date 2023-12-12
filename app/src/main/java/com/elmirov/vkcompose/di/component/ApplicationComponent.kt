@@ -4,7 +4,7 @@ import android.content.Context
 import com.elmirov.vkcompose.di.annotation.ApplicationScope
 import com.elmirov.vkcompose.di.module.DataModule
 import com.elmirov.vkcompose.di.module.ViewModelModule
-import com.elmirov.vkcompose.presentation.main.MainActivity
+import com.elmirov.vkcompose.presentation.ViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
 
@@ -17,7 +17,7 @@ import dagger.Component
 )
 interface ApplicationComponent {
 
-    fun inject(mainActivity: MainActivity)
+    fun getViewModelFactory(): ViewModelFactory
 
     fun getCommentsScreenComponentFactory(): CommentsScreenComponent.Factory
 
